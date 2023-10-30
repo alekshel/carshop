@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block content %}
+
+    <h2 class="mb-5 fs-4">Оберіть модель авто, диллера <b>{{ dealership.name }}</b></h2>
+
+    <div class="row">
+        {% for car_type in car_types %}
+            <div class="col-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ car_type.name }}</h5>
+                        <p>Бренд: {{ car_type.brand }}</p>
+                        <p><b class="text-primary">${{ car_type.price|intcomma }}</b></p>
+                        <a href="/dealership-{{ dealership.id }}/car-type-{{ car_type.id }}/"
+                           class="btn btn-primary"
+                        >Перейти</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}

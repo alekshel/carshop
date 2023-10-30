@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block content %}
+
+    <h2 class="mb-5 fs-4">
+        Кошик
+    </h2>
+
+    {% if request.cart %}
+        <div class="row">
+            {% for car in request.cart %}
+                <div class="col-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <p>Модель: {{ car.car_type.name }}</p>
+                            <p>Бренд: {{ car.car_type.brand }}</p>
+                            <p>Рік випуску: {{ car.year }}</p>
+                            <p>Колір: <span style="width: 50px; height: 25px; background: {{ car.color }}; display: inherit"></span></p>
+                            <p><b class="text-primary">${{ car.car_type.price|intcomma }}</b></p>
+
+                            <a href="/remove-from-cart/{{ car.id }}/" class="btn btn-danger">Видалити з кошику</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="row mt-5">
+            <p>
+                Вартість замовлення: <span class="fw-bold">${{ order_sum|intcomma }}</span>
+            </p>
+            <p><a href="/order-pay/" class="btn btn-success">Сплатити</a></p>
+            <p><a href="/order-cancel/" class="btn btn-danger">Скасувати замовлення</a></p>
+        </div>
+    {% else %}
+        <p>Кошик порожній, але Ви завжди можете це виправити</p>
+    {% endif %}
+
+{% endblock %}

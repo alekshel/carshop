@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="uk">
+    <head>
+        <title>{% block title %}{% endblock %}</title>
+        {% load bootstrap5 %}
+        {% bootstrap_css %}
+        {% bootstrap_javascript %}
+    </head>
+    <body>
+
+        <header class="text-center mt-3 mb-5 fs-2" style="display: flex; justify-content: center; gap: 40px;">
+            <p><a href="/">CarShop</a> - Магазин автомобілів</p>
+            <a href="/cart/">
+                {% if request.cart %}
+                	Кошик: {{ request.cart.count }} авто
+                {% else %}
+                    Кошик порожній
+                {% endif %}
+            </a>
+        </header>
+
+        <div class="container">
+{#            <ul class="nav bg-info">#}
+{#                <li class="nav-item">#}
+{#                    <a class="nav-link link-light" href="/">HOME</a>#}
+{#                </li>#}
+{#                <li class="nav-item">#}
+{#                    <a class="nav-link link-light" href="/members">MEMBERS</a>#}
+{#                </li>#}
+{#            </ul>#}
+
+            {% block content %}
+            {% endblock %}
+        </div>
+
+    </body>
+</html>

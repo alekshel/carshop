@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block content %}
+
+    <h2 class="mb-5 fs-4">
+        Оберіть авто, диллера
+        <b>{{ dealership.name }}</b>,
+        моделі <b>{{ car_type.name }}</b>
+        (${{ car_type.price|intcomma }})
+    </h2>
+
+    <div class="row">
+        {% for car in cars %}
+            <div class="col-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <p>Рік випуску: {{ car.year }}</p>
+                        <p>Колір: <span style="width: 50px; height: 25px; background: {{ car.color }}; display: inherit"></span></p>
+
+                        <a href="/add-to-cart/{{ car.id }}/" class="btn btn-primary">Додати в кошик</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}

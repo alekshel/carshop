@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h2 class="mb-5 fs-4">
+        Замовлення сплачено успішно
+    </h2>
+
+    <p>Бонус від компанії. Придбані авто автоматично реєструються</p>
+
+    <ul>
+        {% for car_license in cars_license %}
+            <li>
+                <p>Авто: {{ car_license.car }}</p>
+                <p>Реєстраційний номер: {{ car_license.number }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}
