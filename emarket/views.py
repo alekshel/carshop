@@ -1,5 +1,6 @@
 import random
 
+from django.db.models import Count
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.urls import reverse
@@ -88,12 +89,19 @@ def home_page(request):
 def car_types_page(request, pk):
     dealership = Dealership.objects.filter(id=pk).values("id", "name").first()
 
-    car_types = list()
-    for car_type in CarType.objects.filter(dealerships=pk).all():
-        if Car.objects.filter(
-            blocked_by_order__isnull=True, owner__isnull=True, car_type=car_type.id
-        ).exists():
-            car_types.append(car_type)
+    # N + 1 проблема виправлена цим варіантом
+    car_types = CarType.objects.filter(
+        dealerships=pk,
+        car__blocked_by_order__isnull=True,
+        car__owner__isnull=True
+    ).annotate(count=Count('id')).all()
+
+    # car_types = list()
+    # for car_type in CarType.objects.filter(dealerships=pk).all():
+    #     if Car.objects.filter(
+    #         blocked_by_order__isnull=True, owner__isnull=True, car_type=car_type.id
+    #     ).exists():
+    #         car_types.append(car_type)
 
     return render(
         request,
