@@ -92,7 +92,7 @@ def car_types_page(request, pk):
     for car_type in CarType.objects.filter(dealerships=pk).all():
         if Car.objects.filter(
             blocked_by_order__isnull=True, owner__isnull=True, car_type=car_type.id
-        ).count():
+        ).exists():
             car_types.append(car_type)
 
     return render(
@@ -102,15 +102,15 @@ def car_types_page(request, pk):
     )
 
 
-def cars_page(request, dpk, cpk):
-    dealership = Dealership.objects.filter(id=dpk).values("name").first()
-    car_type = CarType.objects.filter(id=cpk).values("name", "price").first()
+def cars_page(request, dealer_id, car_type_id):
+    dealership = Dealership.objects.filter(id=dealer_id).values("name").first()
+    car_type = CarType.objects.filter(id=car_type_id).values("name", "price").first()
     cars = Car.objects.filter(
-        blocked_by_order__isnull=True, owner__isnull=True, car_type=cpk
+        blocked_by_order__isnull=True, owner__isnull=True, car_type=car_type_id
     ).all()
 
-    if not cars.count():
-        redirect_url = reverse("car_types_page", args=[dpk])
+    if not cars.exists():
+        redirect_url = reverse("car_types_page", args=[dealer_id])
         return redirect(redirect_url)
 
     return render(
@@ -144,7 +144,7 @@ def remove_from_cart(request, pk):
     ).first()
 
     car_type = CarType.objects.filter(car=pk).first()
-    OrderQuantity.objects.create(car_type=car_type, order=order)
+    OrderQuantity.objects.delete(car_type=car_type, order=order)
 
     Car.objects.get(id=pk).unblock()
 
@@ -169,6 +169,7 @@ def order_cancel(request):
         client=Client.objects.first(), is_paid=False
     ).all()
 
+    # Тут можно було зробити одним запитом через Update
     for order in orders:
         cars = Car.objects.filter(owner__isnull=True, blocked_by_order=order).all()
         for car in cars:
