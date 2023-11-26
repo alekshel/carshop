@@ -188,5 +188,5 @@ LOGIN_URL = "/users/login/"
 # Email settings
 EMAIL_BACKEND = "django_mailjet.backends.MailjetBackend"
 MAILJET_API_KEY = "59634f4f0dd896a5c2b95cd2a5092280"
-MAILJET_API_SECRET = os.getenv("MAILJET_API_SECRET")
+MAILJET_API_SECRET = os.environ.get("MAILJET_API_SECRET")
 DEFAULT_FROM_EMAIL = "alek_shel@icloud.com"
