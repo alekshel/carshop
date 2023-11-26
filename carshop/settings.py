@@ -53,6 +53,7 @@ else:
 INSTALLED_APPS = [
     # Use WhiteNoise's runserver implementation instead of the Django default, for dev-prod parity.
     "whitenoise.runserver_nostatic",
+    "users.apps.UsersConfig",
     "emarket.apps.EmarketConfig",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -181,3 +182,11 @@ WHITENOISE_KEEP_ONLY_HASHED_FILES = True
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+LOGIN_REDIRECT_URL = "/"
+LOGIN_URL = "/users/login/"
+
+# Email settings
+EMAIL_BACKEND = "django_mailjet.backends.MailjetBackend"
+MAILJET_API_KEY = "59634f4f0dd896a5c2b95cd2a5092280"
+MAILJET_API_SECRET = os.getenv("MAILJET_API_SECRET")
+DEFAULT_FROM_EMAIL = "alek_shel@icloud.com"
