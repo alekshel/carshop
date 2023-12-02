@@ -90,11 +90,13 @@ def car_types_page(request, pk):
     dealership = Dealership.objects.filter(id=pk).values("id", "name").first()
 
     # N + 1 проблема виправлена цим варіантом
-    car_types = CarType.objects.filter(
-        dealerships=pk,
-        car__blocked_by_order__isnull=True,
-        car__owner__isnull=True
-    ).annotate(count=Count('id')).all()
+    car_types = (
+        CarType.objects.filter(
+            dealerships=pk, car__blocked_by_order__isnull=True, car__owner__isnull=True
+        )
+        .annotate(count=Count("id"))
+        .all()
+    )
 
     # car_types = list()
     # for car_type in CarType.objects.filter(dealerships=pk).all():
@@ -152,7 +154,7 @@ def remove_from_cart(request, pk):
     ).first()
 
     car_type = CarType.objects.filter(car=pk).first()
-    OrderQuantity.objects.delete(car_type=car_type, order=order)
+    OrderQuantity.objects.filter(car_type=car_type, order=order).delete()
 
     Car.objects.get(id=pk).unblock()
 
@@ -173,9 +175,7 @@ def cart_page(request):
 
 
 def order_cancel(request):
-    orders = Order.objects.filter(
-        client=Client.objects.first(), is_paid=False
-    ).all()
+    orders = Order.objects.filter(client=Client.objects.first(), is_paid=False).all()
 
     # Тут можно було зробити одним запитом через Update
     for order in orders:
@@ -188,9 +188,7 @@ def order_cancel(request):
 
 
 def order_pay(request):
-    orders = Order.objects.filter(
-        client=Client.objects.first(), is_paid=False
-    ).all()
+    orders = Order.objects.filter(client=Client.objects.first(), is_paid=False).all()
 
     cars_license = list()
     for order in orders:

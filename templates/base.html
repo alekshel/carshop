@@ -8,7 +8,7 @@
     </head>
     <body>
 
-        <header class="text-center mt-3 mb-5 fs-2" style="display: flex; justify-content: center; gap: 40px;">
+        <header class="text-center mt-3 mb-2 fs-2" style="display: flex; justify-content: center; gap: 40px;">
             <p><a href="/">CarShop</a> - Магазин автомобілів</p>
             <a href="/cart/">
                 {% if request.cart %}
@@ -18,6 +18,16 @@
                 {% endif %}
             </a>
         </header>
+
+        <div class="text-center mb-5">
+            {% if request.user.is_authenticated %}
+                Ви увійшли, як - <b>{{ request.user }}</b>
+                <a href="{% url 'logout' %}" class="px-3">Покинути</a>
+            {% else %}
+                <a href="{% url 'login' %}">Вхід</a>
+                <a href="{% url 'register' %}">Реєстрація</a>
+            {% endif %}
+        </div>
 
         <div class="container">
 {#            <ul class="nav bg-info">#}
