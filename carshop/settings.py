@@ -15,6 +15,9 @@ import secrets
 from pathlib import Path
 
 import dj_database_url
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -51,6 +54,10 @@ else:
 # Application definition
 
 INSTALLED_APPS = [
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
     # Use WhiteNoise's runserver implementation instead of the Django default, for dev-prod parity.
     "whitenoise.runserver_nostatic",
     "users.apps.UsersConfig",
@@ -79,6 +86,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "emarket.middleware.CartMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "carshop.urls"
@@ -151,9 +159,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "uk"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Asia/Almaty"
 
 USE_I18N = True
 
@@ -190,3 +198,31 @@ EMAIL_BACKEND = "django_mailjet.backends.MailjetBackend"
 MAILJET_API_KEY = "59634f4f0dd896a5c2b95cd2a5092280"
 MAILJET_API_SECRET = os.environ.get("MAILJET_API_SECRET")
 DEFAULT_FROM_EMAIL = "alek_shel@icloud.com"
+
+# Allauth settings
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+]
+
+# Provider specific settings
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
+
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "APP": {
+            "client_id": GOOGLE_CLIENT_ID,
+            "secret": GOOGLE_CLIENT_SECRET,
+            "key": "",
+        },
+        "SCOPE": [
+            "profile",
+            "email",
+        ],
+        "AUTH_PARAMS": {
+            "access_type": "offline",
+        },
+        "OAUTH_PKCE_ENABLED": True,
+    }
+}
