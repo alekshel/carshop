@@ -22,23 +22,14 @@
         <div class="text-center mb-5">
             {% if request.user.is_authenticated %}
                 Ви увійшли, як - <b>{{ request.user }}</b>
-                <a href="{% url 'logout' %}" class="px-3">Покинути</a>
+                <a href="{% url 'account_logout' %}" class="px-3">Покинути</a>
             {% else %}
-                <a href="{% url 'login' %}">Вхід</a>
-                <a href="{% url 'register' %}">Реєстрація</a>
+                <a href="{% url 'account_login' %}">Вхід</a>
+                <a href="{% url 'account_signup' %}">Реєстрація</a>
             {% endif %}
         </div>
 
         <div class="container">
-{#            <ul class="nav bg-info">#}
-{#                <li class="nav-item">#}
-{#                    <a class="nav-link link-light" href="/">HOME</a>#}
-{#                </li>#}
-{#                <li class="nav-item">#}
-{#                    <a class="nav-link link-light" href="/members">MEMBERS</a>#}
-{#                </li>#}
-{#            </ul>#}
-
             {% block content %}
             {% endblock %}
         </div>
