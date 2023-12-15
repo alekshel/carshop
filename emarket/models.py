@@ -12,6 +12,7 @@ class Client(models.Model):
 
 class CarType(models.Model):
     name = models.CharField(max_length=50)
+    photo = models.ImageField(upload_to="car_types", null=True, blank=True)
     brand = models.CharField(max_length=50)
     price = models.PositiveIntegerField()
 

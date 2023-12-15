@@ -9,11 +9,13 @@ from .views import (
     cart_page,
     order_pay,
     order_cancel,
+    update_car_type,
 )
 
 urlpatterns = [
     path("", home_page, name="home_page"),
     path("dealership-<int:pk>/", car_types_page, name="car_types_page"),
+    path("update-car-type/", update_car_type, name="update_car_type"),
     path(
         "dealership-<int:dealer_id>/car-type-<int:car_type_id>/",
         cars_page,
