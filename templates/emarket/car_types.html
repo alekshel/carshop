@@ -3,6 +3,17 @@
 
 {% block content %}
 
+    {% include 'emarket/photo_change.html' %}
+
+    <script>
+        function openModal(button) {
+            let id = button.getAttribute('data-id')
+            let input = document.getElementById('car_type_id')
+            input.value = id
+        }
+    </script>
+
+
     <h2 class="mb-5 fs-4">Оберіть модель авто, диллера <b>{{ dealership.name }}</b></h2>
 
     <div class="row">
@@ -10,6 +21,18 @@
             <div class="col-4">
                 <div class="card">
                     <div class="card-body">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#exampleModal"
+                                data-id="{{ car_type.id }}"
+                                onclick="openModal(this)"
+                        >
+                            Редагувати фото
+                        </button>
+
+                        {% if car_type.photo %}
+                            <img src="{{ car_type.photo.url }}" alt="{{ car_type.name }}" class="img-fluid">
+                        {% endif %}
+
                         <h5 class="card-title">{{ car_type.name }}</h5>
                         <p>Бренд: {{ car_type.brand }}</p>
                         <p><b class="text-primary">${{ car_type.price|intcomma }}</b></p>

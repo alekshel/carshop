@@ -74,6 +74,25 @@ def generate_plate():
     return license_plate
 
 
+def update_car_type(request):
+    if not request.method == "POST":
+        raise Exception("Method not allowed")
+
+    car_type_id = request.POST.get("car_type_id")
+    car_type = CarType.objects.filter(id=car_type_id).first()
+    if not car_type:
+        raise Exception("Car type not found")
+
+    photo = request.FILES.get("photo")
+    if photo:
+        car_type.photo = photo
+        car_type.save()
+
+    dealer_id = car_type.dealerships.first().id
+    redirect_url = reverse("car_types_page", args=[dealer_id])
+    return redirect(redirect_url)
+
+
 def get_cart():
     return Car.objects.filter(
         owner__isnull=True,

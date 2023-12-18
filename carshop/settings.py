@@ -54,6 +54,7 @@ else:
 # Application definition
 
 INSTALLED_APPS = [
+    "storages",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
@@ -180,6 +181,9 @@ STORAGES = {
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
+    "default": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+    },
 }
 
 # Don't store the original (un-hashed filename) version of static files, to reduce slug size:
@@ -225,4 +229,14 @@ SOCIALACCOUNT_PROVIDERS = {
         },
         "OAUTH_PKCE_ENABLED": True,
     }
+}
+
+# AWS settings
+AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
+AWS_STORAGE_BUCKET_NAME = "carshop-photos"
+AWS_S3_REGION_NAME = "eu-north-1"
+AWS_LOCATION = "static"
+AWS_S3_OBJECT_PARAMETERS = {
+    "CacheControl": "max-age=86400",
 }
