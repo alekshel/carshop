@@ -6,7 +6,7 @@ from emarket.models import Dealership, CarType, Car
 class DealershipSerializer(serializers.ModelSerializer):
     class Meta:
         model = Dealership
-        fields = "__all__"
+        fields = ["id", "name"]
 
 
 class CarTypesSerializer(serializers.ModelSerializer):
@@ -18,4 +18,4 @@ class CarTypesSerializer(serializers.ModelSerializer):
 class CarSerializer(serializers.ModelSerializer):
     class Meta:
         model = Car
-        fields = "__all__"
+        fields = ["id", "car_type", "color", "year"]

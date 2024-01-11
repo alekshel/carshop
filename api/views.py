@@ -15,6 +15,7 @@ from emarket.functions import (
     cancel_order,
     pay_order,
 )
+from emarket.models import Car
 from emarket.views import get_cart
 
 
@@ -55,6 +56,9 @@ class CartView(APIView):
 
     @staticmethod
     def post(request, car_id):
+        if not Car.objects.filter(id=car_id, blocked_by_order_id=None).exists():
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
         dealer_id, car_type_id = to_cart(request, car_id)
         return Response(
             {"dealership_id": dealer_id, "car_type_id": car_type_id},
