@@ -3,7 +3,7 @@ import random
 from django.core.management.base import BaseCommand
 from faker import Faker
 
-from emarket.models import Client, CarType, Car, Dealership
+from emarket.models import CarType, Car, Dealership
 
 fake = Faker("uk")
 
