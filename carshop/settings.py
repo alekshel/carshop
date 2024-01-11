@@ -71,6 +71,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.humanize",
     "bootstrap5",
+    "rest_framework",
+    "rest_framework.authtoken",
 ]
 
 MIDDLEWARE = [
@@ -195,13 +197,19 @@ WHITENOISE_KEEP_ONLY_HASHED_FILES = True
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGIN_REDIRECT_URL = "/"
-LOGIN_URL = "/users/login/"
+LOGIN_URL = "/accounts/login/"
 
 # Email settings
 EMAIL_BACKEND = "django_mailjet.backends.MailjetBackend"
 MAILJET_API_KEY = "59634f4f0dd896a5c2b95cd2a5092280"
 MAILJET_API_SECRET = os.environ.get("MAILJET_API_SECRET")
 DEFAULT_FROM_EMAIL = "alek_shel@icloud.com"
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.TokenAuthentication",
+    ]
+}
 
 # Allauth settings
 AUTHENTICATION_BACKENDS = [

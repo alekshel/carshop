@@ -20,16 +20,9 @@ class Command(BaseCommand):
     help = "Add subjects"
 
     def handle(self, *args, **options):
-        Client.objects.all().delete()
         Car.objects.all().delete()
         CarType.objects.all().delete()
         Dealership.objects.all().delete()
-
-        Client.objects.create(
-            name=fake.name(),
-            email=fake.email(),
-            phone="+38050" + str(random.randint(1000000, 9999999)),
-        )
 
         for car_type in CAR_TYPES:
             type_id = CarType.objects.create(

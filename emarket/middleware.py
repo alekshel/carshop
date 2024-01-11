@@ -6,6 +6,6 @@ class CartMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        request.cart = get_cart()
+        request.cart = get_cart(request)
         response = self.get_response(request)
         return response
