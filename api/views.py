@@ -85,10 +85,12 @@ class OrderView(APIView):
     @staticmethod
     def post(request):
         orders = get_orders(request)
+        full_url_webhook = request.build_absolute_uri(reverse("webhook-mono"))
+        full_url_orders = request.build_absolute_uri(reverse("orders"))
         invoice_url = create_invoice(
             orders,
-            reverse("webhook-mono", request=request),
-            reverse("order", request=request),
+            full_url_webhook,
+            full_url_orders,
         )
         return Response({"invoice_url": invoice_url}, status=status.HTTP_200_OK)
 

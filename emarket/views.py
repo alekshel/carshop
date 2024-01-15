@@ -114,7 +114,9 @@ def order_cancel(request):
 @login_required
 def order_pay(request):
     orders = get_orders(request)
-    invoice_url = create_invoice(orders, reverse("webhook-mono"), reverse("orders"))
+    full_url_webhook = request.build_absolute_uri(reverse("webhook-mono"))
+    full_url_orders = request.build_absolute_uri(reverse("orders"))
+    invoice_url = create_invoice(orders, full_url_webhook, full_url_orders)
 
     return redirect(invoice_url)
 
