@@ -22,6 +22,7 @@
         <div class="text-center mb-5">
             {% if request.user.is_authenticated %}
                 Ви увійшли, як - <b>{{ request.user }}</b>
+                <a href="{% url 'orders' %}" class="px-3">Історія замовлень</a>
                 <a href="{% url 'account_logout' %}" class="px-3">Покинути</a>
             {% else %}
                 <a href="{% url 'account_login' %}">Вхід</a>
