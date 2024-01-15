@@ -195,8 +195,11 @@ def cancel_order(request):
     Order.objects.filter(id__in=[order.id for order in orders]).delete()
 
 
-def pay_order(request):
-    orders = get_orders(request)
+def pay_order(request, orders=None):
+    if orders:
+        orders = Order.objects.filter(id__in=orders)
+    else:
+        orders = get_orders(request)
 
     cars_license = list()
     for car in blocked_cars(orders):

@@ -117,6 +117,6 @@ class MonoAcquiringWebhookReceiver(APIView):
         order_invoice.save()
 
         if _status == "success":
-            pay_order(request)
+            pay_order(request, order_invoice.orders.all())
 
         return Response({"status": "ok"})
