@@ -67,10 +67,6 @@ class Order(models.Model):
     )
     is_paid = models.BooleanField(default=False)
 
-    # invoice_id = models.CharField(max_length=100, null=True)
-    # invoice_url = models.CharField(max_length=100, null=True)
-    # status = models.CharField(max_length=100, null=True)
-
 
 class OrderQuantity(models.Model):
     car_type = models.ForeignKey(
@@ -88,7 +84,7 @@ class OrderInvoice(models.Model):
 
 
 class MonoSettings(models.Model):
-    public_key = models.CharField(max_length=100, unique=True)
+    public_key = models.CharField(max_length=255, unique=True)
     received_at = models.DateTimeField(auto_now_add=True)
 
     @classmethod
