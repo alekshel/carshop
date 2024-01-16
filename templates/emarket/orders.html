@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h2 class="mb-5 fs-4">
+        Історія замовлень
+    </h2>
+
+    <ul>
+        {% for order in orders %}
+            <li>
+                <p>ID замовлення: {{ order.id }}</p>
+                <p>Діллер: {{ order.dealership }}</p>
+                <p>Вартість замовлення: {{ order.amount }} $</p>
+                <p>
+                    Статус оплати:
+                    {% if not order.is_paid %}
+                        Не оплачено
+                    {% else %}
+                        Оплачено
+                    {% endif %}
+                </p>
+
+                <p>Список замовлення:</p>
+                <ul>
+                    {% for car in order.cars %}
+                        <li>
+                            <p>Колір: {{ car.color }}</p>
+                            <p>Рік: {{ car.year }}</p>
+                            <p>Тип авто: {{ car.car_type.name }}</p>
+                            {% if car.licence_number %}
+                                <p>Реєстраційний номер: {{ car.licence_number }}</p>
+                            {% endif %}
+                        </li>
+                        <br>
+                    {% endfor %}
+                </ul>
+
+            </li>
+
+            <br>
+            <br>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

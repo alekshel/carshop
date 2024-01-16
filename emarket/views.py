@@ -1,5 +1,3 @@
-import random
-
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.shortcuts import redirect
@@ -15,8 +13,10 @@ from .functions import (
     from_cart,
     get_order_sum,
     cancel_order,
-    pay_order,
+    get_orders,
+    get_detail_orders,
 )
+from .invoices import create_invoice
 from .models import CarType, Car
 
 
@@ -113,5 +113,16 @@ def order_cancel(request):
 
 @login_required
 def order_pay(request):
-    cars_license = pay_order(request)
-    return render(request, "emarket/order_success.html", {"cars_license": cars_license})
+    orders = get_orders(request)
+    full_url_webhook = request.build_absolute_uri(reverse("webhook-mono"))
+    full_url_orders = request.build_absolute_uri(reverse("orders"))
+    invoice_url = create_invoice(orders, full_url_webhook, full_url_orders)
+
+    return redirect(invoice_url)
+
+
+@login_required
+def get_orders_page(request):
+    return render(
+        request, "emarket/orders.html", {"orders": get_detail_orders(request)}
+    )

@@ -38,7 +38,9 @@ SECRET_KEY = os.environ.get(
 IS_HEROKU_APP = "DYNO" in os.environ and not "CI" in os.environ
 
 # SECURITY WARNING: don't run with debug turned on in production!
-if not IS_HEROKU_APP:
+if IS_HEROKU_APP:
+    DEBUG = os.environ.get("DJANGO_DEBUG", default=True)
+else:
     DEBUG = True
 
 # On Heroku, it's safe to use a wildcard for `ALLOWED_HOSTS``, since the Heroku router performs
@@ -248,3 +250,5 @@ AWS_LOCATION = "static"
 AWS_S3_OBJECT_PARAMETERS = {
     "CacheControl": "max-age=86400",
 }
+
+MONOBANK_TOKEN = os.getenv("MONOBANK_TOKEN")

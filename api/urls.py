@@ -16,4 +16,9 @@ urlpatterns += [
     path("cart/<int:car_id>/", views.CartView.as_view(), name="cart"),
     path("cart/", views.CartView.as_view(), name="cart"),
     path("order/", views.OrderView.as_view(), name="order"),
+    path(
+        "webhook-mono/",
+        views.MonoAcquiringWebhookReceiver.as_view(),
+        name="webhook-mono",
+    ),
 ]

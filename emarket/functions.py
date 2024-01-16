@@ -144,8 +144,42 @@ def get_order_sum(cart):
     return order_sum
 
 
-def get_orders(request):
-    return Order.objects.filter(client=request.user, is_paid=False).all()
+def get_orders(request, is_paid=False):
+    orders = Order.objects.filter(client=request.user)
+    if not is_paid:
+        orders = orders.filter(is_paid=False)
+    return orders.order_by("-id").all()
+
+
+def get_detail_orders(request):
+    orders = get_orders(request, True)
+    output = []
+    for order in orders:
+        _cars = Car.objects.filter(blocked_by_order=order).all()
+        cars = [
+            {
+                "id": car.id,
+                "color": car.color,
+                "year": car.year,
+                "car_type": {
+                    "id": car.car_type.id,
+                    "name": car.car_type.name,
+                },
+                "licence_number": car.licence.number if order.is_paid else [],
+            }
+            for car in _cars
+        ]
+
+        output.append(
+            {
+                "id": order.id,
+                "dealership": order.dealership.name,
+                "is_paid": order.is_paid,
+                "cars": cars,
+                "amount": get_order_sum(_cars),
+            }
+        )
+    return output
 
 
 def blocked_cars(orders):
@@ -161,8 +195,11 @@ def cancel_order(request):
     Order.objects.filter(id__in=[order.id for order in orders]).delete()
 
 
-def pay_order(request):
-    orders = get_orders(request)
+def pay_order(request, orders=None):
+    if orders:
+        orders = Order.objects.filter(id__in=orders)
+    else:
+        orders = get_orders(request)
 
     cars_license = list()
     for car in blocked_cars(orders):

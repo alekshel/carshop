@@ -10,6 +10,7 @@ from .views import (
     order_pay,
     order_cancel,
     update_car_type,
+    get_orders_page,
 )
 
 urlpatterns = [
@@ -24,6 +25,7 @@ urlpatterns = [
     path("cart/", cart_page, name="cart_page"),
     path("add-to-cart/<int:pk>/", add_to_cart),
     path("remove-from-cart/<int:pk>/", remove_from_cart),
+    path("orders/", get_orders_page, name="orders"),
     path("order-pay/", order_pay),
     path("order-cancel/", order_cancel),
 ]

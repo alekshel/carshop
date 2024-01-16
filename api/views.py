@@ -1,6 +1,7 @@
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
 from api.permissions import ReadOnlyPermission
@@ -14,8 +15,11 @@ from emarket.functions import (
     get_order_sum,
     cancel_order,
     pay_order,
+    get_orders,
+    get_detail_orders,
 )
-from emarket.models import Car
+from emarket.invoices import create_invoice, verify_signature
+from emarket.models import Car, OrderInvoice
 from emarket.views import get_cart
 
 
@@ -75,11 +79,44 @@ class OrderView(APIView):
     permission_classes = [IsAuthenticated]
 
     @staticmethod
+    def get(request):
+        return Response(get_detail_orders(request), status=status.HTTP_200_OK)
+
+    @staticmethod
     def post(request):
-        cars_license = pay_order(request)
-        return Response(cars_license, status=status.HTTP_200_OK)
+        orders = get_orders(request)
+        full_url_webhook = request.build_absolute_uri(reverse("webhook-mono"))
+        full_url_orders = request.build_absolute_uri(reverse("orders"))
+        invoice_url = create_invoice(
+            orders,
+            full_url_webhook,
+            full_url_orders,
+        )
+        return Response({"invoice_url": invoice_url}, status=status.HTTP_200_OK)
 
     @staticmethod
     def delete(request):
         cancel_order(request)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class MonoAcquiringWebhookReceiver(APIView):
+    @staticmethod
+    def post(request):
+        try:
+            verify_signature(request)
+        except Exception as e:
+            return Response({"status": "error"}, status=400)
+        reference = request.data.get("reference")
+        order_invoice = OrderInvoice.objects.get(id=reference)
+        if order_invoice.invoice_id != request.data.get("invoiceId"):
+            return Response({"status": "error"}, status=400)
+
+        _status = request.data.get("status", "error")
+        order_invoice.status = _status
+        order_invoice.save()
+
+        if _status == "success":
+            pay_order(request, order_invoice.orders.all())
+
+        return Response({"status": "ok"})
