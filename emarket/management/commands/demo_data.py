@@ -3,7 +3,7 @@ import random
 from django.core.management.base import BaseCommand
 from faker import Faker
 
-from emarket.models import Client, CarType, Car, Dealership
+from emarket.models import CarType, Car, Dealership
 
 fake = Faker("uk")
 
@@ -20,16 +20,9 @@ class Command(BaseCommand):
     help = "Add subjects"
 
     def handle(self, *args, **options):
-        Client.objects.all().delete()
         Car.objects.all().delete()
         CarType.objects.all().delete()
         Dealership.objects.all().delete()
-
-        Client.objects.create(
-            name=fake.name(),
-            email=fake.email(),
-            phone="+38050" + str(random.randint(1000000, 9999999)),
-        )
 
         for car_type in CAR_TYPES:
             type_id = CarType.objects.create(
