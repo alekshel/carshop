@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Чек про оплату</title>
+</head>
+<body>
+    <h1>Заказ №{{ order_id }}. Успішно оплачено</h1>
+    <br>
+    <br>
+    
+    <p>Придбані авто:</p>
+    <ul>
+        {% for car_license in cars_license %}
+            <li>Авто: {{ car_license.car }}</li>
+            <li>Ціна: {{ car_license.price }}</li>
+            <li>Ліцензія: {{ car_license.number }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

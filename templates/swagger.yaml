@@ -152,6 +152,22 @@ paths:
           204:
             description: successful operation
   /order/:
+    get:
+      tags:
+        - order
+      summary: Get user orders
+      description: Get user orders
+      security:
+        - Token: []
+      responses:
+        '200':
+          description: return orders
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserOrders'
     post:
       tags:
         - order
@@ -166,8 +182,12 @@ paths:
             application/json:
               schema:
                 properties:
-                  cars_license:
-                    $ref: '#/components/schemas/OrderPay'
+                  invoice_url:
+                    type: string
+                    example: https://www.mbnk.ua/
+                  status:
+                    type: string
+                    example: processing
     delete:
       tags:
         - order
@@ -233,6 +253,29 @@ components:
         car_type:
           type: integer
           example: 1
+    CarInOrder:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        color:
+          type: string
+          example: #ffffff
+        year:
+          type: integer
+          example: 2011
+        car_type:
+          properties:
+            id:
+              type: integer
+              example: 1
+            name:
+              type: string
+              example: Пассат
+        licence_number:
+          type: string
+          example: АН 1234 АН
     Cart:
       type: object
       properties:
@@ -243,6 +286,25 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Car'
+    UserOrders:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        dealership:
+          type: string
+          example: Київ АвтоСервіс
+        is_paid:
+          type: boolean
+          example: true
+        cars:
+          type: array
+          items:
+            $ref: '#/components/schemas/CarInOrder'
+        amount:
+          type: integer
+          example: 100000
     OrderPay:
         type: object
         properties:

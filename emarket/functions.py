@@ -1,8 +1,19 @@
 import random
 
+from django.core.mail import EmailMessage
 from django.db.models import Count
+from django.template.loader import render_to_string
 
-from emarket.models import Dealership, CarType, Car, Order, OrderQuantity, Licence
+from carshop import settings
+from emarket.models import (
+    Dealership,
+    CarType,
+    Car,
+    Order,
+    OrderQuantity,
+    Licence,
+    OrderInvoice,
+)
 
 
 def generate_plate():
@@ -195,6 +206,20 @@ def cancel_order(request):
     Order.objects.filter(id__in=[order.id for order in orders]).delete()
 
 
+def send_check(order_id, cars_license, recipient):
+    html_content = render_to_string(
+        "email/order_notify.html", {"order_id": order_id, "cars_license": cars_license}
+    )
+
+    subject = f"Заказ №{order_id}. Успішно оплачено"
+    from_email = settings.DEFAULT_FROM_EMAIL
+    recipient_list = [recipient]
+
+    email = EmailMessage(subject, html_content, from_email, recipient_list)
+    email.content_subtype = "html"
+    email.send()
+
+
 def pay_order(request, orders=None):
     if orders:
         orders = Order.objects.filter(id__in=orders)
@@ -206,8 +231,13 @@ def pay_order(request, orders=None):
         car.sell()
         number = generate_plate()
         Licence.objects.create(car=car, number=number)
-        cars_license.append({"car": car.car_type.name, "number": number})
+        cars_license.append(
+            {"car": car.car_type.name, "price": car.car_type.price, "number": number}
+        )
 
     orders.update(is_paid=True)
+
+    order_id = OrderInvoice.objects.filter(orders__in=orders).first().id
+    send_check(order_id, cars_license, orders.first().client.email)
 
     return cars_license

@@ -31,9 +31,7 @@ urlpatterns = [
     ),
     path(
         "swagger/",
-        TemplateView.as_view(
-            template_name="swagger-ui.html", extra_context={"schema_url": "schema-yaml"}
-        ),
+        TemplateView.as_view(template_name="swagger-ui.html"),
         name="swagger-ui",
     ),
 ]
