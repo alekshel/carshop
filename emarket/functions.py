@@ -5,7 +5,15 @@ from django.db.models import Count
 from django.template.loader import render_to_string
 
 from carshop import settings
-from emarket.models import Dealership, CarType, Car, Order, OrderQuantity, Licence, OrderInvoice
+from emarket.models import (
+    Dealership,
+    CarType,
+    Car,
+    Order,
+    OrderQuantity,
+    Licence,
+    OrderInvoice,
+)
 
 
 def generate_plate():
@@ -200,11 +208,7 @@ def cancel_order(request):
 
 def send_check(order_id, cars_license, recipient):
     html_content = render_to_string(
-        "email/order_notify.html",
-        {
-            "order_id": order_id,
-            "cars_license": cars_license
-        }
+        "email/order_notify.html", {"order_id": order_id, "cars_license": cars_license}
     )
 
     subject = f"Заказ №{order_id}. Успішно оплачено"
@@ -227,11 +231,9 @@ def pay_order(request, orders=None):
         car.sell()
         number = generate_plate()
         Licence.objects.create(car=car, number=number)
-        cars_license.append({
-            "car": car.car_type.name,
-            "price": car.car_type.price,
-            "number": number
-        })
+        cars_license.append(
+            {"car": car.car_type.name, "price": car.car_type.price, "number": number}
+        )
 
     orders.update(is_paid=True)
 
