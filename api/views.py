@@ -1,9 +1,12 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status
+from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
+from api.pagination.limited_pagination import LimitedPagination
 from api.permissions import ReadOnlyPermission
 from api.serializers import DealershipSerializer, CarTypesSerializer, CarSerializer
 from emarket.functions import (
@@ -27,11 +30,17 @@ class DealershipViewSet(viewsets.ModelViewSet):
     queryset = get_dealerships()
     serializer_class = DealershipSerializer
     permission_classes = [ReadOnlyPermission]
+    filter_backends = [SearchFilter]
+    search_fields = ["$name"]
+    pagination_class = LimitedPagination
 
 
 class CarTypesViewSet(viewsets.ModelViewSet):
     serializer_class = CarTypesSerializer
     permission_classes = [ReadOnlyPermission]
+    filter_backends = [SearchFilter]
+    search_fields = ["$name"]
+    pagination_class = LimitedPagination
 
     def get_queryset(self):
         return get_car_types(self.kwargs["dealer_id"])
@@ -40,6 +49,9 @@ class CarTypesViewSet(viewsets.ModelViewSet):
 class CarsViewSet(viewsets.ModelViewSet):
     serializer_class = CarSerializer
     permission_classes = [ReadOnlyPermission]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["year"]
+    pagination_class = LimitedPagination
 
     def get_queryset(self):
         return get_cars(self.kwargs["car_type_id"])

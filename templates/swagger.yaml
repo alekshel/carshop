@@ -61,6 +61,22 @@ paths:
         - catalog
       summary: Get dealerships
       description: Get dealerships
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Search by name
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: Limit the number of items in the response
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: Number of items to skip before starting to collect the response
       responses:
         '200':
           description: successful operation
@@ -76,6 +92,28 @@ paths:
         - catalog
       summary: Get car_types
       description: Get car_types
+      parameters:
+        - in: path
+          name: dealer_id
+          schema:
+            type: integer
+          required: true
+          description: ID of the dealer
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Search by name
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: Limit the number of items in the response
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: Number of items to skip before starting to collect the response
       responses:
         '200':
           description: successful operation
@@ -91,6 +129,28 @@ paths:
         - catalog
       summary: Get cars
       description: Get cars
+      parameters:
+        - in: path
+          name: car_type_id
+          schema:
+            type: integer
+          required: true
+          description: ID of the car_type
+        - in: query
+          name: year
+          schema:
+           type: string
+          description: Filter by year
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: Limit the number of items in the response
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: Number of items to skip before starting to collect the response
       responses:
         '200':
           description: successful operation

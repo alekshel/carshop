@@ -75,6 +75,7 @@ INSTALLED_APPS = [
     "bootstrap5",
     "rest_framework",
     "rest_framework.authtoken",
+    "django_filters",
 ]
 
 MIDDLEWARE = [
@@ -210,7 +211,7 @@ DEFAULT_FROM_EMAIL = "alek_shel@icloud.com"
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.TokenAuthentication",
-    ]
+    ],
 }
 
 # Allauth settings
